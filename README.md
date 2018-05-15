@@ -37,6 +37,11 @@ and save the preloaded contents.
 
     $ python preload.py --root=~/webapps/
 
+You can specify a `--removable` to configure removable attrbute in metadata.json.
+By default removable is False.
+
+    $ python preload.py --removable=[true|false]
+
 ### convert web icon to base64 string
 
 fetch icon from URL and convert it to base64 string

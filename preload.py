@@ -217,7 +217,7 @@ def fetch_appcache(domain, remote_dir, local_dir, lines):
     return (newlines, headers)
 
 
-def fetch_webapp(app_url, directory=None):
+def fetch_webapp(app_url, directory=None, removable=False):
     """
     get webapp file and parse for preinstalled webapp
 
@@ -238,7 +238,7 @@ def fetch_webapp(app_url, directory=None):
         logger.info('fetching manifest...')
         manifest_url = open_from_url(app_url)
         manifest = json.loads(manifest_url.read().decode('utf-8-sig'))
-        metadata['installOrigin'] = 'https://marketplace.firefox.com'
+        metadata['installOrigin'] = 'app://kaios-plus.kaiostech.com'
         if 'etag' in manifest_url.headers:
             metadata['etag'] = manifest_url.headers['etag']
     else:
@@ -315,6 +315,14 @@ def fetch_webapp(app_url, directory=None):
     metadata['manifestURL'] = app_url
     metadata['external'] = True
 
+    if removable == 'true':
+      metadata['removable'] = True
+    else:
+      metadata['removable'] = False
+
+    if 'type' in manifest:
+        metadata['type'] = manifest['type']
+
     f = file(os.path.join(app_dir, 'metadata.json'), 'w')
     f.write(json.dumps(metadata))
     f.close()
@@ -331,6 +339,8 @@ def main():
                         help = 'Root directory to run from')
     parser.add_argument('--icon',
                         help = 'Fetch webapp icon')
+    parser.add_argument('--removable', default=False,
+                        help = 'Root directory to run from')
     parser.add_argument('webapp', nargs = '?')
     args = parser.parse_args()
 
@@ -345,7 +355,7 @@ def main():
 
     # fetch single webapp
     elif (args.webapp):
-        fetch_webapp(args.webapp)
+        fetch_webapp(args.webapp, args.root, args.removable)
 
     else:
         # automatically read and compose customized webapp from list
@@ -356,7 +366,7 @@ def main():
             while True:
                 line = fd.readline()
                 if (len(line.split(',')) > 1):
-                    fetch_webapp(line.split(',')[1].rstrip('\n'))
+                    fetch_webapp(line.split(',')[1].rstrip('\n'), args.root, args.removable)
                 else:
                     break
 
