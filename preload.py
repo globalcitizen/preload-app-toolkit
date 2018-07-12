@@ -19,6 +19,7 @@ import argparse
 
 APPCACHE_LOCAL_DEFAULT_PATH = 'cache/'
 APPCACHE_LOCAL_DEFAULT_NAME = 'manifest.appcache'
+MANIFEST_CODE_PAGE = 'utf-8-sig'
 
 logger = logging.getLogger('GaiaPreloadApp')
 logger.setLevel(logging.INFO)
@@ -237,14 +238,14 @@ def fetch_webapp(app_url, directory=None, removable=False):
         logger.info('manifest: ' + app_url)
         logger.info('fetching manifest...')
         manifest_url = open_from_url(app_url)
-        manifest = json.loads(manifest_url.read().decode('utf-8-sig'))
+        manifest = json.loads(manifest_url.read().decode(MANIFEST_CODE_PAGE))
         metadata['installOrigin'] = 'app://kaios-plus.kaiostech.com'
         if 'etag' in manifest_url.headers:
             metadata['etag'] = manifest_url.headers['etag']
     else:
         logger.info('extract manifest from zip...')
         appzip = ZipFile(app_url, 'r').read('manifest.webapp')
-        manifest = json.loads(appzip.decode('utf-8-sig'))
+        manifest = json.loads(appzip.decode(MANIFEST_CODE_PAGE))
 
     appname = get_directory_name(manifest['name'])
     app_dir = appname
@@ -311,6 +312,7 @@ def fetch_webapp(app_url, directory=None, removable=False):
             resources.write(',\n'.join(headers))
             resources.write('\n}\n');
 
+    print app_url
     # add manifestURL for update
     metadata['manifestURL'] = app_url
     metadata['external'] = True
@@ -341,12 +343,20 @@ def main():
                         help = 'Fetch webapp icon')
     parser.add_argument('--removable', default=False,
                         help = 'Root directory to run from')
+    parser.add_argument('--code', default='utf-8-sig',
+                        help = 'Code used to decode manifest')
+
     parser.add_argument('webapp', nargs = '?')
     args = parser.parse_args()
 
     os.chdir(args.root)
 
     print args.root
+
+    global MANIFEST_CODE_PAGE
+
+    if args.code == 'latin':
+        MANIFEST_CODE_PAGE = 'latin-1'
 
     # icon convertion script
     if (args.icon):
