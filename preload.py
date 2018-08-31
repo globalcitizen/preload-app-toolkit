@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import urllib
+from six.moves import urllib
 import base64
 import mimetypes
 import os
@@ -39,14 +39,14 @@ def retrieve_from_url(url, target):
     """
     if (os.path.isdir(target)):
         target += 'index.html'
-    return urllib.urlretrieve(url, target)
+    return urllib.request.urlretrieve(url, target)
 
 
 def open_from_url(url):
     """
     return file object from url
     """
-    return urllib.urlopen(url)
+    return urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Mobile; KAIOS; rv:48.0) Gecko/48.0 Firefox/40.0 KAIOS/2.5'}))
 
 
 def get_absolute_url(domain, path, icon):

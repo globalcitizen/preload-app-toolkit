@@ -42,6 +42,12 @@ By default removable is False.
 
     $ python preload.py --removable=[true|false]
 
+## Install python six for urllib.request
+```shell
+$ pip install --upgrade pip
+$ pip install six
+```
+
 ### convert web icon to base64 string
 
 fetch icon from URL and convert it to base64 string
