@@ -2,17 +2,17 @@
 
 ## Why need Gaia Preload App script
 
-Pre-bundled webapp are not quite the same as usual webapp, since Pre-bundled webapp may be seen before internet is ready.
-It have to store linked icon to buildin base-64 strings,
-provide correspondent matadata.json, prefetched appcache..., etc.
+Pre-bundled webapps are not quite the same as usual webapps, since pre-bundled webapps may be seen before internet connectivity.
 
-Gaia Preload App script provide a `preload.py` script that help build pre-bundled webapp from a given .webapp URL.
+They have to store linked icons as built-in base-64 strings, provide the corresponding `metadata.json`, prefetched appcache, etc.
+
+Gaia Preload App script is a `preload.py` script that helps to build a Pre-bundled webapp from a given `.webapp` URL.
 
 ## Usage
 
 ### fetch a single webapp
 
-Find a webapp URL that want to bundled with, and run the command:
+Find a webapp URL that you want to bundle, and run the command:
 
     $ python preload.py http://<webapp url>
 
